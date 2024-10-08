@@ -2,12 +2,16 @@ package main
 
 import (
 	"fmt"
+	tgGrpc "invest_telega/pkg/grpc"
+	"invest_telega/pkg/grpc/server"
+	"invest_telega/pkg/logger"
+	"invest_telega/telega"
 	"log"
+	"net"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
-	tele "gopkg.in/telebot.v3"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -15,23 +19,32 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+	var (
+		botToken   = os.Getenv("TOKEN")
+		listenAddr = os.Getenv("GRPC_LISTEN_ADDR")
+	)
 
-	botToken := os.Getenv("TOKEN")
+	logger := logger.NewLogger(logger.SetupPrettySlog())
 
-	pref := tele.Settings{
-		Token:  botToken,
-		Poller: &tele.LongPoller{Timeout: 10 * time.Second},
-	}
-
-	b, err := tele.NewBot(pref)
+	// Create a new Telega service
+	svc, err := telega.New(botToken, logger)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 
-	b.Handle("/getid", func(c tele.Context) error {
-		return c.Send(fmt.Sprintf("Ваш ID: %d", c.Chat().ID))
-	})
+	// Make a TCP Listener
+	ln, err := net.Listen("tcp", listenAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer ln.Close()
 
-	b.Start()
+	// Make a new GRPC native server with (options)
+	grpcServer := grpc.NewServer([]grpc.ServerOption{}...)
+
+	// Register (OUR) GRPC server implementation to the GRPC package.
+	tgGrpc.RegisterTelegaServer(grpcServer, server.NewGRPCTelegaServer(svc))
+	fmt.Println("GRPC Telega is running on port", listenAddr)
+
+	grpcServer.Serve(ln)
 }

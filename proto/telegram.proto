@@ -1,3 +1,14 @@
-syntax = "proto3"
+syntax = "proto3";
 
-option go_package 
+option go_package = "pkg/grpc";
+
+service Telega {
+	rpc SendMsg(MessageInfo) returns (None);
+}
+
+message MessageInfo {
+	string ChatId = 1;
+	string Text = 2;
+}
+
+message None {}
