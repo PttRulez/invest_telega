@@ -13,7 +13,7 @@ import (
 
 func (s *Service) SendMsg(msgInfo *tgGrpc.MessageInfo) error {
 	s.logger.Debug(fmt.Sprintf("ChatID: %s", msgInfo.GetChatId()))
-	s.logger.Debug(fmt.Sprintf("Sent message: %s", msgInfo.GetText()))
+	s.logger.Debug(fmt.Sprintf("Sent message text: %s", msgInfo.GetText()))
 
 	u := &User{ID: msgInfo.GetChatId()}
 	_, err := s.bot.Send(u, msgInfo.GetText())
