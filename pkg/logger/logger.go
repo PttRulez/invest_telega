@@ -1,9 +1,10 @@
 package logger
 
 import (
-	"invest_telega/pkg/logger/slogpretty"
 	"log/slog"
 	"os"
+
+	"github.com/pttrulez/invest_telega/pkg/logger/slogpretty"
 )
 
 type Logger struct {

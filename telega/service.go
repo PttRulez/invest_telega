@@ -2,9 +2,11 @@ package telega
 
 import (
 	"fmt"
-	tgGrpc "invest_telega/pkg/grpc"
-	"invest_telega/pkg/logger"
 	"time"
+
+	tgGrpc "github.com/pttrulez/invest_telega/pkg/grpc"
+
+	"github.com/pttrulez/invest_telega/pkg/logger"
 
 	tele "gopkg.in/telebot.v3"
 )

@@ -2,7 +2,7 @@ package client
 
 import (
 	"context"
-	tgGrpc "invest_telega/pkg/grpc"
+	tgGrpc "github.com/pttrulez/invest_telega/pkg/grpc"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

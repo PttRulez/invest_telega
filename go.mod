@@ -1,4 +1,4 @@
-module invest_telega
+module github.com/pttrulez/invest_telega
 
 go 1.22.0
 

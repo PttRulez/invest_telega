@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	tgGrpc "invest_telega/pkg/grpc"
-	"invest_telega/pkg/grpc/server"
-	"invest_telega/pkg/logger"
-	"invest_telega/telega"
+	tgGrpc "github.com/pttrulez/invest_telega/pkg/grpc"
+	"github.com/pttrulez/invest_telega/pkg/grpc/server"
+	"github.com/pttrulez/invest_telega/pkg/logger"
+	"github.com/pttrulez/invest_telega/telega"
 	"log"
 	"net"
 	"os"

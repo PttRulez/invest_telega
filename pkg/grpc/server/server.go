@@ -2,7 +2,8 @@ package server
 
 import (
 	"context"
-	tgGrpc "invest_telega/pkg/grpc"
+
+	tgGrpc "github.com/pttrulez/invest_telega/pkg/grpc"
 )
 
 func (s *GRPCTelegaServer) SendMsg(ctx context.Context, msgInfo *tgGrpc.MessageInfo) (*tgGrpc.None, error) {
