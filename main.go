@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	tgGrpc "github.com/pttrulez/invest_telega/pkg/grpc"
-	"github.com/pttrulez/invest_telega/pkg/grpc/server"
-	"github.com/pttrulez/invest_telega/pkg/logger"
-	"github.com/pttrulez/invest_telega/telega"
 	"log"
 	"net"
 	"os"
+
+	"github.com/pttrulez/invest_telega/internal/grpctransport"
+	"github.com/pttrulez/invest_telega/internal/telega"
+	"github.com/pttrulez/invest_telega/pkg/logger"
+	"github.com/pttrulez/invest_telega/pkg/protogen"
 
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
@@ -21,7 +22,7 @@ func main() {
 	}
 	var (
 		botToken   = os.Getenv("TOKEN")
-		listenAddr = os.Getenv("GRPC_LISTEN_ADDR")
+		listenPort = os.Getenv("GRPC_LISTEN_PORT")
 	)
 
 	logger := logger.NewLogger(logger.SetupPrettySlog())
@@ -33,7 +34,7 @@ func main() {
 	}
 
 	// Make a TCP Listener
-	ln, err := net.Listen("tcp", listenAddr)
+	ln, err := net.Listen("tcp", fmt.Sprintf(":%s", listenPort))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,8 +44,8 @@ func main() {
 	grpcServer := grpc.NewServer([]grpc.ServerOption{}...)
 
 	// Register (OUR) GRPC server implementation to the GRPC package.
-	tgGrpc.RegisterTelegaServer(grpcServer, server.NewGRPCTelegaServer(svc))
-	fmt.Println("GRPC Telega is running on port", listenAddr)
+	protogen.RegisterTelegaServer(grpcServer, grpctransport.NewGRPCTelegaServer(svc))
+	fmt.Println("GRPC Telega is running on port", listenPort)
 
 	grpcServer.Serve(ln)
 }

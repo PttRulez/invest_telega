@@ -1,0 +1,14 @@
+name: investor_go_app
+services:
+  telega:
+    container_name: investor-telega
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - ${DOCKER_LISTEN_PORT}:${GRPC_LISTEN_PORT}
+    networks:
+      - investor_network
+
+networks:
+  investor_network:
+    name: investor_network

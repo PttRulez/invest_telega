@@ -1,16 +1,17 @@
-package client
+package grpctransport
 
 import (
 	"context"
-	tgGrpc "github.com/pttrulez/invest_telega/pkg/grpc"
+
+	"github.com/pttrulez/invest_telega/pkg/protogen"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 type TelegramClient struct {
-	tgGrpc.TelegaClient
-	client tgGrpc.TelegaClient
+	protogen.TelegaClient
+	client protogen.TelegaClient
 }
 
 func NewTelegramClient(endpoint string) (*TelegramClient, error) {
@@ -19,12 +20,12 @@ func NewTelegramClient(endpoint string) (*TelegramClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	c := tgGrpc.NewTelegaClient(conn)
+	c := protogen.NewTelegaClient(conn)
 
 	return &TelegramClient{client: c}, nil
 }
 
-func (c *TelegramClient) SendMsg(ctx context.Context, msgInfo *tgGrpc.MessageInfo) error {
+func (c *TelegramClient) SendMsg(ctx context.Context, msgInfo *protogen.MessageInfo) error {
 	_, err := c.client.SendMsg(ctx, msgInfo)
 	return err
 }

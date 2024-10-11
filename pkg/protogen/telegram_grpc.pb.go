@@ -4,7 +4,7 @@
 // - protoc             v5.26.1
 // source: proto/telegram.proto
 
-package grpc
+package protogen
 
 import (
 	context "context"
