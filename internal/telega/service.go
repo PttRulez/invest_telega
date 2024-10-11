@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	tgGrpc "github.com/pttrulez/invest_telega/pkg/grpc"
+	"github.com/pttrulez/invest_telega/pkg/protogen"
 
 	"github.com/pttrulez/invest_telega/pkg/logger"
 
 	tele "gopkg.in/telebot.v3"
 )
 
-func (s *Service) SendMsg(msgInfo *tgGrpc.MessageInfo) error {
+func (s *Service) SendMsg(msgInfo *protogen.MessageInfo) error {
 	s.logger.Debug(fmt.Sprintf("ChatID: %s", msgInfo.GetChatId()))
 	s.logger.Debug(fmt.Sprintf("Sent message text: %s", msgInfo.GetText()))
 
