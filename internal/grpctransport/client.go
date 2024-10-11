@@ -3,29 +3,50 @@ package grpctransport
 import (
 	"context"
 
-	"github.com/pttrulez/invest_telega/pkg/protogen"
-
+	"github.com/pttrulez/investor-go-next/go-api/pkg/protogen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-type TelegramClient struct {
-	protogen.TelegaClient
-	client protogen.TelegaClient
+type GRPCInvestorClient struct {
+	protogen.InvestorClient
+	grpcClient protogen.InvestorClient
 }
 
-func NewTelegramClient(endpoint string) (*TelegramClient, error) {
+func NewInvestorGRPCClient(endpoint string) (*GRPCInvestorClient, error) {
 	conn, err := grpc.NewClient(endpoint, grpc.WithTransportCredentials(
 		insecure.NewCredentials()))
 	if err != nil {
 		return nil, err
 	}
-	c := protogen.NewTelegaClient(conn)
+	grpcClient := protogen.NewInvestorClient(conn)
 
-	return &TelegramClient{client: c}, nil
+	return &GRPCInvestorClient{grpcClient: grpcClient}, nil
 }
 
-func (c *TelegramClient) SendMsg(ctx context.Context, msgInfo *protogen.MessageInfo) error {
-	_, err := c.client.SendMsg(ctx, msgInfo)
-	return err
+func (s *GRPCInvestorClient) GetPortfolioList(ctx context.Context,
+	chatId string) ([]*protogen.Portfolio, error) {
+	req := &protogen.PortfolioListRequest{
+		ChatId: chatId,
+	}
+	res, err := s.grpcClient.GetPortfolioList(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return res.GetPortfolios(), nil
+}
+
+func (s *GRPCInvestorClient) GetPortfolioSummaryMessage(ctx context.Context, portfolioID int,
+	chatId string) (string, error) {
+	req := &protogen.PortfolioRequest{
+		Id:     int64(portfolioID),
+		ChatId: chatId,
+	}
+	res, err := s.grpcClient.GetPortfolioSummaryMessage(ctx, req)
+	if err != nil {
+		return "", err
+	}
+
+	return res.GetText(), nil
 }
